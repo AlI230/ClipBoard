@@ -1,0 +1,17 @@
+<% if(notes) { %>
+    <% notes.forEach(function(note) { %>
+        <div class="card mt-4" style="border: none; border-radius: 20px;">
+            <div class="card-header" style="background-color: #D00000; border-radius: 20px 20px 0 0; height: 50px;">
+                <h5 style="color: whitesmoke;"><%= note.title %></h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><%= note.text %></p>
+            </div>
+            <div class="card-footer text-muted" style="height: 45px;">
+                <p>user: <%= note.username %></p>
+            </div>
+        </div>
+    <% }); %>
+<% } else { %>
+    <p class="text-light text-center mt-5">No notes to show</p>
+<% } %>

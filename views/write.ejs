@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <h1 class="text-center text-light my-4">Write Note</h1>
+        <form action="/notes/write" method="POST">
+            
+            <div class="form-group">
+                <input type="text" name="title" placeholder="Title" class="form-control">
+                <br>
+                <textarea type="text" name="text" placeholder="Type note here..." class="form-control"></textarea>
+                <br>
+                <input type="text" name="username" placeholder="Username" rows="3" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class="col-4"></div>
+</div>

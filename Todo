@@ -1,0 +1,9 @@
+1) Passport protection and router authorazation + error handles fixen
+
+2) logout button + if logged in loginBtn gone
+
+3) create delete function for notes --> only the users self can do delete it
+
+4) make the Archive page functional + function to save notes
+
+5) create about page
