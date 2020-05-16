@@ -3,7 +3,18 @@
     <% notes.forEach(function(note) { %>
         <div class="card mt-4" style="border: none; border-radius: 20px;">
             <div class="card-header" style="background-color: #D00000; border-radius: 20px 20px 0 0; height: 50px;">
-                <h5 style="color: whitesmoke;"><%= note.title %></h3>
+                <h5 style="color: whitesmoke;"><%= note.title %></h5>
+                <form action="/notes/archive/<%= note.username %>/<%= note.title %>" method="POST" class="nav justify-content-end">
+                    <button style="position: relative;
+                    margin-top: -37px;
+                    height: 35px;
+                    width: 120px;
+                    border: 1.5px solid #343434;
+                    border-radius: 13px;
+                    color: #343434;
+                    font-size: 16px;
+                    font-family: Arial, Helvetica, sans-serif;">Save Note</button>
+                </form>
             </div>
             <div class="card-body">
                 <p class="card-text"><%= note.text %></p>

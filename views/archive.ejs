@@ -1,2 +1,31 @@
 <h1 class="text-light text-center mt-4">Archive Page</h1>
-<p class="text-light text-center mt-4">here can you store all notes that you want by saving them.</p>
+
+<% if(notes) { %>
+    <% notes.forEach(function(note) { %>
+        <div class="card mt-4" style="border: none; border-radius: 20px;">
+            <div class="card-header" style="background-color: #D00000; border-radius: 20px 20px 0 0; height: 50px;">
+                <h5 style="color: whitesmoke;"><%= note.note.title %></h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><%= note.note.text %></p>
+                <form action="/notes/delete/<%= note.title %>" method="POST" class="justify-content-end mr-3">
+                    <button style="position: relative;
+                    margin-top: -40px;
+                    height: 35px;
+                    width: 100px;
+                    border:none;
+                    border-radius: 13px;
+                    color: #ffffff;
+                    background-color: #D00000;
+                    font-size: 16px;
+                    font-family: Arial, Helvetica, sans-serif;">Delete</button>
+                </form>
+            </div>
+            <div class="card-footer text-muted" style="height: 45px;">
+                <p>user: <%= note.note.username %></p>
+            </div>
+        </div>
+    <% }); %>
+<% } else { %>
+    <p class="text-light text-center mt-5">No notes to show</p>
+<% } %>

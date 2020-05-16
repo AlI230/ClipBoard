@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/users');
-const Note = require('../models/notes')
+const Note = require('../models/notes');
+const Archive = require('../models/archive');
 
 router.get('/write', (req, res)=> {
     res.render('write');
@@ -30,7 +31,54 @@ router.post('/write', (req, res)=> {
 });
 
 router.get('/archive', (req, res)=> {
-    res.render('archive')
+    Archive.find({userSave: req.user.username}, (err, notes)=> {
+        if(err) return req.flash('error_msg', 'Something went wrong');
+        if(notes) {
+            res.render('archive', {notes: notes});
+        } else {
+            res.render('archive', {notes: false});
+        }
+    });
+});
+
+router.post('/archive/:username/:title', (req, res)=> {
+    Note.findOne({username: req.params.username, title: req.params.title}, (err, note)=> {
+        if(err) req.flash('error_msg', 'Something went wrong');
+        if(note) {
+            Archive.findOne({userSave: req.user.username}, (err, archive)=> {
+                if(err) req.flash('error_msg', 'Something went wrong');
+                if(archive) {
+                    if(archive.note.title === req.params.title) {
+                        req.flash('error_msg', 'Note already saved');
+                        res.redirect('/');
+                    } else {
+                        const archive = new Archive();
+
+                        archive.userSave = req.user.username;
+                        archive.note.title = note.title;
+                        archive.note.text = note.text;
+                        archive.note.username = note.username;
+    
+                        archive.save();
+                        req.flash('success_msg', 'Note saved in Archive');
+                        res.redirect('/');
+                    }
+                } else {
+                    const archive = new Archive();
+
+                    archive.userSave = req.user.username;
+                    archive.note.title = note.title;
+                    archive.note.text = note.text;
+                    archive.note.username = note.username;
+
+                    archive.save();
+                    req.flash('success_msg', 'Note saved in Archive');
+                    res.redirect('/');
+                }
+                   
+            });
+        }
+    })
 });
 
 router.post('/delete/:title', (req, res)=> {
