@@ -23,20 +23,35 @@ height: 60px;">
             <a class="nav-link" href="/notes/archive" style="color: whitesmoke; font-size: 18px; margin-top: 10px;">Archive</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/about" style="color: whitesmoke; font-size: 18px; margin-top: 10px;">About</a>
+            <a class="nav-link" href="/notes/usernotes" style="color: whitesmoke; font-size: 18px; margin-top: 10px;">Your notes</a>
         </li>
     </ul>
-    <form action="/user/login" method="GET" class="nav justify-content-end mr-3">
-        <button style="position: relative;
-        margin-top: -40px;
-        height: 35px;
-        width: 100px;
-        border: 1.5px solid #343434;
-        border-radius: 13px;
-        color: #343434;
-        font-size: 16px;
-        font-family: Arial, Helvetica, sans-serif;">Login</button>
-    </form>
+    <% if(login) { %>
+        <form action="/user/logout" method="GET" class="nav justify-content-end mr-3">
+            <button style="position: relative;
+            margin-top: -40px;
+            height: 35px;
+            width: 100px;
+            border: 1.5px solid #343434;
+            border-radius: 13px;
+            color: #343434;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;">Logout</button>
+        </form>
+    <% } else { %>
+        <form action="/user/login" method="GET" class="nav justify-content-end mr-3">
+            <button style="position: relative;
+            margin-top: -40px;
+            height: 35px;
+            width: 100px;
+            border: 1.5px solid #343434;
+            border-radius: 13px;
+            color: #343434;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;">Login</button>
+        </form>
+    <% } %>
+    
 </div>
  <div class="container">
     

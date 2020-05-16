@@ -1,9 +1,11 @@
-1) Passport protection and router authorazation + error handles fixen
+1) Passport protection and router authorazation + error handles fixen DONE
 
-2) logout button + if logged in loginBtn gone
+2) logout button + if logged in loginBtn gone DONE
 
-3) create delete function for notes --> only the users self can do delete it
+3) create delete function for notes --> only the users self can do delete it DONE(error message not user of note fixen)
 
 4) make the Archive page functional + function to save notes
 
-5) create about page
+5) create 'Your notes' page DONE
+
+6) fix all req.flash errors

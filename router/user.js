@@ -2,30 +2,26 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/users');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+
+require('../middleware/passport')(passport)
 
 router.get('/login', (req, res)=> {
     res.render('login');
 });
 
-router.post('/login', (req, res)=> {
-    let errors = [];
-    if(req.body.email || req.body.password != null) {
-        User.findOne({ email: req.body.email }, (err, user)=> {
-            if(err) return req.flash({error_msg: 'Something wrong finding user'});
-            if(!user) return errors.push({msg: 'email Not registered'});
-            if(user) {
-                bcrypt.compare(req.body.password, user.password, (err, isMatch)=> {
-                    if(err) return req.flash({error_msg: 'Something wrong with password'});
-                    if(!isMatch) return req.flash({error_msg: 'Wrong password'})
-                    if(isMatch) {
-                        res.redirect('/')
-                    } 
-                });
-            }
-        });
-    } else {
-        errors.push({ msg: 'Please enter all fields'});
-    }
+router.post('/login', (req, res, next)=> {
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/user/login',
+        failureFlash: true
+    })(req, res, next);
+});
+
+router.get('/logout', (req, res)=>{
+    req.logout();
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('/user/login');
 });
 
 router.get('/signup', (req, res)=> {

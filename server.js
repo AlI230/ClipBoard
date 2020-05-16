@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
 const Note = require('./models/notes');
+const passport = require('passport');
+const morgan = require('morgan');
+const { forwardAuthenticated, ensureAuthenticated } = require('./middleware/auth');
 
 const app = express();
 
@@ -19,12 +22,19 @@ app.set('views', 'views');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Server logs
+app.use(morgan('short'));
+
 // ExpressSession middleware
 app.use(session({
     secret: '1503',
     resave: true,
     saveUninitialized: true
 }));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Flash middleware
 app.use(flash());
@@ -45,11 +55,20 @@ db.once('open', ()=> {
 const user = require('./router/user');
 const notes = require('./router/notes');
 
+app.use(function (req, res, next) {
+    res.locals.login = req.isAuthenticated();
+    next();
+  });
+
 app.get('/', (req, res)=> {
     Note.find({}, (err, notes)=>{
-        if(err) return req.flash({error_msg: 'Something went wrong'});
-        if(!notes || notes.length === 0) return res.render('index', {notes: false})
-        if(notes) return res.render('index', {notes: notes})
+        if(err) return req.flash('error_msg', 'Something went wrong');
+        if(!notes || notes.length === 0) {
+            res.render('index', {notes: false});
+        }
+        if(notes) {
+            res.render('index', {notes: notes});
+        }
     });
 });
 
@@ -59,7 +78,7 @@ app.get('/about', (req, res)=> {
 
 app.use('/user', user);
 
-app.use('/notes', notes);
+app.use('/notes', ensureAuthenticated, notes);
 
 const port = 3000;
 
