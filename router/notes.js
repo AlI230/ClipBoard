@@ -5,21 +5,29 @@ const Note = require('../models/notes');
 const Archive = require('../models/archive');
 
 router.get('/write', (req, res)=> {
-    res.render('write');
+    res.render('write', {user: req.user});
 });
 
 router.post('/write', (req, res)=> {
     if(req.body.title && req.body.text && req.body.username != null ) {
         if(req.user.username === req.body.username) {
-            const note = new Note()
+            Note.findOne({title: req.body.title}, (err, note)=> {
+                if(err) return req.flash('error_msg', 'Someting went wrong');
+                if(note) {
+                    req.flash('error_msg', 'Title already exist');
+                    res.redirect('/notes/write');
+                } else {
+                    const note = new Note()
 
-            note.title = req.body.title;
-            note.text = req.body.text;
-            note.username = req.body.username;
+                    note.title = req.body.title;
+                    note.text = req.body.text;
+                    note.username = req.body.username;
 
-            note.save();
-            req.flash('success_msg', 'Succesfully created a note');
-            res.redirect('/')
+                    note.save();
+                    req.flash('success_msg', 'Succesfully created a note');
+                    res.redirect('/');
+                }
+            });
         } else {
             req.flash('error_msg', 'You cannot use an other username');
             res.redirect('/notes/write');
