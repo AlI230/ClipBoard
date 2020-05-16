@@ -2,10 +2,10 @@
 
 2) logout button + if logged in loginBtn gone DONE
 
-3) create delete function for notes --> only the users self can do delete it DONE(error message not user of note fixen)
+3) create delete function for notes --> only the users self can do delete it DONE
 
-4) make the Archive page functional + function to save notes
+4) create 'Your notes' page DONE
 
-5) create 'Your notes' page DONE
+5) fix all req.flash errors DONE
 
-6) fix all req.flash errors
+6) make the Archive page functional + function to save notes

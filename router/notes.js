@@ -8,8 +8,7 @@ router.get('/write', (req, res)=> {
 });
 
 router.post('/write', (req, res)=> {
-    let errors = [];
-    if(req.body.title || req.body.text || req.body.username != null ) {
+    if(req.body.title && req.body.text && req.body.username != null ) {
         if(req.user.username === req.body.username) {
             const note = new Note()
 
@@ -18,12 +17,15 @@ router.post('/write', (req, res)=> {
             note.username = req.body.username;
 
             note.save();
+            req.flash('success_msg', 'Succesfully created a note');
             res.redirect('/')
         } else {
-            req.flash('error_msg', 'You cannot use an other username')
+            req.flash('error_msg', 'You cannot use an other username');
+            res.redirect('/notes/write');
         }
     } else {
-        errors.push({msg: 'Please enter all fields'});
+        req.flash('error_msg' ,'Please enter all fields');
+        res.redirect('/notes/write');
     }
 });
 
@@ -37,10 +39,13 @@ router.post('/delete/:title', (req, res)=> {
         if(user) {
             Note.findOneAndRemove({title: req.params.title}, (err, note)=> {
                 if(err) return req.flash('error_msg', 'Deleting failed');
-                res.redirect('/')
+                req.flash('success_msg', 'Note deleted')
+                res.redirect('/');
             });
-        } else {
+        } 
+        if(!user) {
             req.flash('error_msg', 'You cannot delete others notes');
+            res.redirect('/');
         }
     });
 });
@@ -48,10 +53,27 @@ router.post('/delete/:title', (req, res)=> {
 router.get('/usernotes', (req, res)=> {
     Note.find({username: req.user.username}, (err, notes)=> {
         if(err) return req.flash('error_msg', 'Sometinh went wrong');
-        if(notes) {
-            res.render('usernotes', {notes: notes});
-        } else {
+        if(!notes || notes.length === 0) {
             res.render('usernotes', {notes: false});
+        } else {
+            res.render('usernotes', {notes: notes});
+        }
+    });
+});
+
+router.post('/usernotes/delete/:title', (req, res)=> {
+    Note.findOne({username: req.user.username}, (err, user)=> {
+        if(err) return req.flash('error_msg', 'Something went wrong'); 
+        if(user) {
+            Note.findOneAndRemove({title: req.params.title}, (err, note)=> {
+                if(err) return req.flash('error_msg', 'Deleting failed');
+                req.flash('success_msg', 'Note deleted')
+                res.redirect('/notes/usernotes');
+            });
+        } 
+        if(!user) {
+            req.flash('error_msg', 'You cannot delete others notes');
+            res.redirect('/notes/usernotes');
         }
     });
 });

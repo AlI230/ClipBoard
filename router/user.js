@@ -29,21 +29,18 @@ router.get('/signup', (req, res)=> {
 });
 
 router.post('/signup', (req, res)=> {
-    let errors = [];
     if (req.body.username && req.body.name && req.body.firstname && req.body.email && req.body.password != null) {   
         User.findOne({ email : req.body.email }, (err, user)=> {
-            if(err){
-                errors.push({ msg : 'error email' });
-            }
+            if(err) return req.flash('error', 'something went wrong');
             if(user){
-                errors.push({msg: 'email already used'});
+                req.flash('error_msg' ,'email already used');
+                res.redirect('/user/signup');
             } else {
                 User.findOne({ username : req.body.username }, (err, user)=> {
-                    if(err) {
-                        errors.push({ msg : 'error username' });
-                    }
+                    if(err) return req.flash('error', 'Something went wrong');
                     if (user) {
-                        errors.push({msg: 'username already used'});
+                        req.flash('error_msg', 'username already used');
+                        req.redirect('/user/signup');
                     } else  {
 
                         var salt = bcrypt.genSaltSync(10);
@@ -58,13 +55,15 @@ router.post('/signup', (req, res)=> {
                         user.password = hash;
 
                     user.save();
+                    req.flash('success_msg', 'Succesfully created account');
                     res.redirect(`/`);
                     }
                 });
             }
         });
     } else {
-        errors.push({msg: 'Please enter all fields'})
+       req.flash('error_msg', 'Please enter all fields');
+       res.redirect('/user/signup');
     }
 });
 

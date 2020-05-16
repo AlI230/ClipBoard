@@ -58,7 +58,7 @@ const notes = require('./router/notes');
 app.use(function (req, res, next) {
     res.locals.login = req.isAuthenticated();
     next();
-  });
+});
 
 app.get('/', (req, res)=> {
     Note.find({}, (err, notes)=>{
@@ -66,14 +66,10 @@ app.get('/', (req, res)=> {
         if(!notes || notes.length === 0) {
             res.render('index', {notes: false});
         }
-        if(notes) {
+        else {
             res.render('index', {notes: notes});
         }
     });
-});
-
-app.get('/about', (req, res)=> {
-    res.render('about');
 });
 
 app.use('/user', user);
